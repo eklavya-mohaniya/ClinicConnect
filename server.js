@@ -1,27 +1,35 @@
-const express = require('express')
-const colors = require('colors')
-const morgan = require('morgan')
-const dotenv = require('dotenv')
+const express = require('express');
+const colors = require('colors');
+const morgan = require('morgan');
+const dotenv = require('dotenv');
 
-//dotenv config
+// Load environment variables from .env file
 dotenv.config();
 
-// rest object
-const app = express()
+// Create express app
+const app = express();
 
-//middlerwares
-app.use(express.json())
-app.use(morgan('dev'))
+// Middleware
+app.use(express.json());
+app.use(morgan('dev'));
 
-//routes
-app.get('/',(req,res) => {
+// Routes
+app.get('/', (req, res) => {
     res.status(200).send({
-        message:"server running",
+        message: "Server is running",
     });
 });
-// port
-const port = process.env.PORT || 8080
-//LISTEN PORT
+
+// Port configuration
+const port = process.env.PORT || 8080;
+
+// Listen for connections
 app.listen(port, () => {
-    console.log(`server running in ${process.env.NODE_ENV} Mode on port ${port}`.bgCyan.white);
+    console.log(`Server running in ${process.env.NODE_ENV || 'development'} Mode on port ${port}`.bgCyan.white);
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
 });
